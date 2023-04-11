@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "transform.h"
 #include "Audio.h"
+#include "SkyBox.h"
 
 enum class GameState{PLAY, EXIT};
 
@@ -46,6 +47,7 @@ private:
 	Shader what;
 	Shader geomShader;
 
+	Skybox skybox;
 
 	Texture texture1;
 	Texture texture2;

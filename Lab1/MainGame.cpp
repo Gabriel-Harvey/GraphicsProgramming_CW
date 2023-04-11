@@ -46,6 +46,18 @@ void MainGame::initSystems()
 	myCamera.initCamera(glm::vec3(2, 0, -4), 70.0f, (float)_gameDisplay.getWidth()/_gameDisplay.getHeight(), 0.01f, 1000.0f);
 
 	counter = 1.0f;
+
+	vector<std::string> faces
+	{
+		"..\\res\\skybox\\right.jpg",
+		"..\\res\\skybox\\left.jpg",
+		"..\\res\\skybox\\top.jpg",
+		"..\\res\\skybox\\bottom.jpg",
+		"..\\res\\skybox\\front.jpg",
+		"..\\res\\skybox\\back.jpg"
+	};
+
+	skybox.init(faces);
 }
 
 void MainGame::gameLoop()
@@ -162,34 +174,28 @@ void MainGame::linkBumpMapping()
 
 void MainGame::linkGeoShader() 
 {
-	float randX = ((float)rand() / (RAND_MAX));
-	float randY = ((float)rand() / (RAND_MAX));
-	float randZ = ((float)rand() / (RAND_MAX));
-
-	geomShader.setFloat("randColourX", randX);
-	geomShader.setFloat("randColourY", randY);
-	geomShader.setFloat("randColourZ", randZ);
-
 	geomShader.setFloat("time", counter);
-
 }
 
 void MainGame::drawGame()
 {
 	_gameDisplay.clearDisplay(0.8f, 0.8f, 0.8f, 1.0f); //sets our background colour
+	skybox.draw(&myCamera);
 	
+	transform.SetPos(glm::vec3(-1.0, 0.0, 0.0));
+	transform.SetRot(glm::vec3(0.0, counter, 0.0));
+	transform.SetScale(glm::vec3(0.6, 0.6, 0.6));
+	
+	geomShader.Bind();		
 	linkGeoShader();
 	
 	//Texture texture("..\\res\\bricks.jpg");
 
 
-	geomShader.Bind();
+
 	//texture.Bind(0);
 	geomShader.Update(transform, myCamera);
 
-	transform.SetPos(glm::vec3(-1.0, 0.0, 0.0));
-	transform.SetRot(glm::vec3(0.0, counter, 0.0));
-	transform.SetScale(glm::vec3(0.6, 0.6, 0.6));
 
 	mesh1.updateSphereData(*transform.GetPos(), 0.62f);		
 	mesh1.draw();
